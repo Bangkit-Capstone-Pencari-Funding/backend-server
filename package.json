@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch src --exec \"node src/index.js\"",
-    "prisma:dev": "npx prisma migrate dev --name name"
+    "prisma:dev": "npx prisma migrate dev"
   },
   "keywords": [],
   "author": "",
