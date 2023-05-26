@@ -10,6 +10,18 @@ async function getAllUsers() {
     return users
 }
 
+async function getUser(req){
+    const {id} = req.params
+    const user = await prisma.user.findFirst({
+        where:{
+            id: id
+        }
+    })
+    if(!user) throw new ApiError(404, "user not found")
+
+    return user
+}
+
 async function createUser(req){
     const {name, email} = req.body
     const created = await prisma.user.create({
@@ -52,5 +64,6 @@ module.exports = {
     getAllUsers,
     createUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    getUser
 }

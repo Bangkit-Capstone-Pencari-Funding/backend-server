@@ -10,6 +10,7 @@ router
     
 router
     .route("/users/:id")
+    .get(authController.getOneUser)
     .put(authController.put)
     .delete(authController.deleted)
 
