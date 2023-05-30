@@ -1,58 +1,34 @@
-const { getAllUsers, createUser, updateUser, deleteUser,getUser } = require('../services/user.service')
+const { ApiError } = require('../errors')
+const { createUser, loginUser } = require('../services/user.service')
 const catchAsync = require('../utils/catchAsync')
 
-const index = catchAsync(async (req, res)=>{
-    const users = await getAllUsers()
+
+const signUp = catchAsync(async (req, res, next) => {
+    const createdUser = await createUser(req)
     res.json({payload: {
-        users: users
+        users: createdUser
     }
     })
 })
 
-const getOneUser = catchAsync(async (req, res) => {
-    const user = await getUser(req)
-    res.json({
-        payload:{
-            user: user
-        }
+const login = catchAsync(async (req, res, next) => {
+    const token = await loginUser(req)
+    res.json({payload: {
+        token: token
+    }
     })
 })
 
-const post = catchAsync(async (req, res) => {
-    const created = await createUser(req)
-    res.json({
-        payload:{
-            created: created
-        }
-    })
-})
-
-
-const put = catchAsync(async (req, res) => {
-    const updated = await updateUser(req)
-    console.log("test")
-    res.json({
-        payload:{
-            updated: updated
-        }
-    })
-})
-
-
-const deleted = catchAsync(async (req, res, next) => {
-    const deletedUser = await deleteUser(req)
-    res.json({
-        payload:{
-            deleted: deletedUser
-        }
+const index = catchAsync(async (req, res)=>{
+    res.json({payload: {
+        users: req.user
+    }
     })
 })
 
 
 module.exports= {
     index,
-    getOneUser,
-    post,
-    put,
-    deleted
+    signUp,
+    login
 }

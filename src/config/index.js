@@ -1,4 +1,8 @@
+require('dotenv').config()
+
+
 module.exports = {
-    port: 3000,
-    env: false ? 'development':"production"
+    port: process.env.PORT || 3000,
+    env: process.env.ENV || 'development',
+    jwt_secret: process.env.JWT_SECRET
 }

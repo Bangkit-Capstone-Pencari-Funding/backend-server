@@ -1,8 +1,13 @@
 FROM node:latest
-WORKDIR /app
+WORKDIR /src
 
-COPY /app /app
-COPY package*.json .
+COPY /src /src
+COPY /prisma /src/prisma
+COPY package*.json ./
 
-CMD ["npm", "install", "npm", "run", "dev"]
-EXPOSE 8080
+RUN npm install
+
+CMD ["npm", "run", "dev"]
+EXPOSE 8080/tcp
+
+# ENV DATABASE_URL="mysql://root:root@172.22.48.1:3306/bangkit_capstone?schema=public"
