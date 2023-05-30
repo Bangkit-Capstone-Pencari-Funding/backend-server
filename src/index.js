@@ -1,9 +1,10 @@
 const app = require('./app');
 const config = require('./config');
 const logger = require('./config/logger');
+const prisma = require('./utils/prisma');
 
 let server;
-function init() {
+async function init() {
   server = app.listen(config.port, () => {
     logger.info(`Listening on http://localhost:${config.port}`);
   });
@@ -15,9 +16,11 @@ const exitHandler = () => {
   if (server) {
     server.close(() => {
       logger.info('Server closed');
+      prisma.$disconnect()
       process.exit(1);
     });
   } else {
+    prisma.$disconnect()
     process.exit(1);
   }
 };

@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Article {
+  id    String @id @default(uuid())
+  title String @db.VarChar(255)
+  url   String @db.VarChar(2048)
+}
+
+model Ingredient {
+  id          String  @id @default(uuid())
+  name        String  @db.VarChar(255)
+  nutritions  String  @db.VarChar(255)
+  picture     String?  @db.VarChar(255)
+  recipe      IngredientOnRecipe[]
+}
+
+model Children {
+  id            String    @id @default(uuid())
+  name          String    @db.VarChar(255)
+  date_of_birth DateTime  @db.DateTime(0)
+  height        Float
+  weight        Float
+  activity      Int
+  created_at    DateTime? @default(now()) @db.Timestamp(0)
+  updated_at    DateTime? @default(now()) @db.Timestamp(0)
+  user_id       String @unique
+  user          User? @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Comment {
+  id         String  @id @default(uuid())
+  user_id    String
+  recipe_id  String
+  content    String? @db.Text
+  picture    String? @db.VarChar(255)
+  rating     Int
+  users      User?    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "komentar_ibfk_1")
+  recipe     Recipe  @relation(fields: [recipe_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id], map: "user_id")
+  @@index([user_id], map: "recipe_id")
+}
+
+model Recipe {
+  id             String    @id @default(uuid())
+  name           String    @db.VarChar(255)
+  target_age     Int?
+  estimated_time Int?
+  rating         Float
+  picture        String    @db.VarChar(255)
+  how_to         String    @db.Text
+  Tools          String?   @db.Text
+  description    String    @db.Text
+
+  comment        Comment[]
+  diary          DiaryOnRecipe[]
+  ingredients    IngredientOnRecipe[]
+
+  @@map("resep")
+}
+
+model User {
+  id         String     @id @default(uuid())
+  name       String     @db.VarChar(255)
+  email      String     @db.VarChar(255) @unique
+  password   String     @db.VarChar(255)
+  created_at DateTime   @default(now()) @db.Timestamp(0)
+  updated_at DateTime   @default(now()) @db.Timestamp(0)
+
+  comments   Comment[]
+  children   Children[]
+  diary Diary[]
+  
+
+  @@map("users")
+}
+
+
+model IngredientOnRecipe {
+  id String @id @default(uuid())
+  recipe_id String
+  ingredient_id String
+  ingredient Ingredient? @relation(fields: [ingredient_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  recipe Recipe? @relation(fields: [recipe_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model DiaryOnRecipe {
+  // id String @id @default(uuid())
+  recipe_id String
+  diary_id String
+  recipe Recipe? @relation(fields: [recipe_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map:"DiaryOnRecipe_recipe_id_fkey1")
+  diary Diary? @relation(fields: [diary_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "DiaryOnRecipe_recipe_id_fkey2")
+  created_at DateTime   @default(now()) @db.Timestamp(0)
+  updated_at DateTime   @default(now()) @db.Timestamp(0)
+
+  @@id([recipe_id, diary_id])
+}
+
+
+model Diary {
+  id String @id @default(uuid())
+  date DateTime @default(now()) @db.Timestamp(0)
+  content String @db.VarChar(255)
+  user_id String
+  user User? @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  recipe DiaryOnRecipe[]
+}
