@@ -4,4 +4,4 @@ services:
     ports:
       - 8080:3000
   database:
-    image: 
+    image:

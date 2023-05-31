@@ -56,7 +56,7 @@ model Recipe {
   rating         Float
   picture        String    @db.VarChar(255)
   how_to         String    @db.Text
-  Tools          String?   @db.Text
+  tools          String?   @db.Text
   description    String    @db.Text
 
   comment        Comment[]

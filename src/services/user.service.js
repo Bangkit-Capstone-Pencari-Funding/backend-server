@@ -36,6 +36,21 @@ async function getUser(req){
     return user
 }
 
+async function createUserGoogle(userData){
+    const { name, email } = userData
+    if(!name) throw new ApiError(400, "Name required")
+    if(!email) throw new ApiError(400, "Email required")
+    const result = await prisma.user.create({
+        data: {
+            name: name,
+            email: email,
+            password: 'GOOGLE_OAUTH2'
+        }
+    })
+    delete result.password
+    return result
+}
+
 async function createUser(req){
     const {name, email, password} = req.body
     if(!name) throw new ApiError(400, "Name required")
@@ -95,5 +110,6 @@ module.exports = {
     createUser,
     getUser,
     loginUser,
-    updateUser
+    updateUser,
+    createUserGoogle
 }
