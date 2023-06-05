@@ -6,7 +6,7 @@ const cors = require('cors');
 const config = require('./config');
 const routes = require('./routes/v1');
 const httpStatus = require('http-status')
-const { ApiError:CustomError } = require('./errors')
+const { ApiError } = require('./errors')
 const { errorConverter, errorHandler } = require('./middlewares/error')
 
 
@@ -29,8 +29,14 @@ app.options("*", cors())
 
 app.use("/v1", routes)
 
+app.use("/", (req, res, next) =>{
+    res.json({
+        message: "welcome to Growell RestAPI"
+    })
+})
+
 app.use((req, res, next) => {
-    next(new CustomError(httpStatus.NOT_FOUND, "Page Not Founds"))
+    next(new ApiError(httpStatus.NOT_FOUND, "Page Not Founds"))
 })
 
 app.use(errorConverter)

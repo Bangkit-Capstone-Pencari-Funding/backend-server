@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch src --exec \"node src/index.js\"",
+    "container": "nodemon --watch src --exec \"node ./index.js\" && npx prisma migrate dev",
     "prisma:dev": "npx prisma migrate dev"
   },
   "keywords": [],
@@ -16,6 +17,7 @@
     "prisma": "^4.14.1"
   },
   "dependencies": {
+    "@google-cloud/storage": "^6.10.1",
     "@prisma/client": "^4.14.1",
     "bcrypt": "^5.1.0",
     "compression": "^1.7.4",
@@ -25,6 +27,7 @@
     "helmet": "^7.0.0",
     "http-status": "^1.6.2",
     "jsonwebtoken": "^9.0.0",
+    "multer": "^1.4.5-lts.1",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "winston": "^3.8.2",

@@ -9,6 +9,7 @@ const errorConverter = (err, req, res, next) => {
   let error = err;
   if(error instanceof Prisma.PrismaClientKnownRequestError) {
     const message = httpStatus[400]
+    console.log({...error})
     error = new ApiError(httpStatus.BAD_REQUEST, message)
   }
   else if (!(error instanceof ApiError)) {

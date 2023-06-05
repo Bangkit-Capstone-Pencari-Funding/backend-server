@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const {jwt_secret} = require('../config')
+const {jwt_secret,token_expiration } = require('../config')
 
 async function createToken(payload){
     const token = await jwt.sign(payload, jwt_secret, {
-        expiresIn: "2m"
+        expiresIn: token_expiration
     });
 
     return token

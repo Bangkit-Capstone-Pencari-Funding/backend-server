@@ -3,6 +3,7 @@ const {ApiError} = require('../errors/')
 const bcrypt = require('bcrypt')
 const httpStatus = require('http-status')
 const createToken = require('../utils/createJWT')
+const createTokenPayload = require('../utils/createTokenPayload')
 
 
 async function loginUser(req){
@@ -18,22 +19,36 @@ async function loginUser(req){
     if(!checkEmail) throw new ApiError(httpStatus.BAD_REQUEST, "User not found")
     const isLogin = await bcrypt.compare(password, checkEmail.password)
     if(!isLogin) throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid Credentials")
-    const token = await createToken({
-        name: checkEmail.name,
-        id: checkEmail.id
-    })
+    const token = await createToken(createTokenPayload(checkEmail))
     return token
 }
 
-async function getUser(req){
-    const {id} = req.params
-    const user = await prisma.user.findFirst({
+async function getUser(req, include){
+    const {id} = req.user
+    const query = {
         where:{
             id: id
+        },
+    }
+    if(include) query.include = include
+    console.log("query")
+    console.log(query)
+    const user = await prisma.user.findFirst(query)
+    if(!user) throw new ApiError(404, "user not found")
+    delete user.password
+    delete user.created_at
+    delete user.updated_at
+    return user
+}
+
+async function findUserByEmail(email){
+    if(!email) throw new ApiError(httpStatus.BAD_REQUEST, "Email required")
+    const result = await prisma.user.findFirst({
+        where:{
+            email: email
         }
     })
-    if(!user) throw new ApiError(404, "user not found")
-    return user
+    return result
 }
 
 async function createUserGoogle(userData){
@@ -52,7 +67,7 @@ async function createUserGoogle(userData){
 }
 
 async function createUser(req){
-    const {name, email, password} = req.body
+    const {name, email, password, phone} = req.body
     if(!name) throw new ApiError(400, "Name required")
     if(!email) throw new ApiError(400, "Email required")
     if(!password) throw new ApiError(400, "password required")
@@ -67,16 +82,19 @@ async function createUser(req){
     if(checkEmail) throw new ApiError(400, "Email already used")
     const salt = await bcrypt.genSalt(10)
     const encryptedPass = await bcrypt.hash(password, salt)
-    const created = await prisma.user.create({
-        data: {
+    const data = {
             name: name,
             email: email,
             password: encryptedPass
         }
+    if(phone){
+        data.phone = phone
+    }
+    const created = await prisma.user.create({
+        data: data
     })
 
     delete created.password
-    delete created.id
     return created
 }
 
@@ -111,5 +129,6 @@ module.exports = {
     getUser,
     loginUser,
     updateUser,
+    findUserByEmail,
     createUserGoogle
 }

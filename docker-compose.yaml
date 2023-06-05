@@ -1,7 +1,29 @@
 services:
-  app:
+  database:
+    image: mysql:latest
+    hostname: database
+    container_name: database
+    ports:
+      - 3333:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_HOST=localhost
+      - MYSQL_DATABASE=bangkit_capstone
+    # command: --default-authentication-plugin=mysql_native_password
+    restart: always
+  myapp:
     build: .
     ports:
       - 8080:3000
-  database:
-    image:
+    env_file:
+      - .env
+    depends_on:
+      - database
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      - 9000:80
+    environment:
+      - PMA_ARBITRARY=1
+  

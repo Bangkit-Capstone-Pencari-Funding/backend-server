@@ -21,7 +21,12 @@ model Ingredient {
   recipe      IngredientOnRecipe[]
 }
 
-model Children {
+enum Gender{
+  LAKI        @map("laki-laki")
+  PEREMPUAN   @map("perempuan")
+}
+
+model Child {
   id            String    @id @default(uuid())
   name          String    @db.VarChar(255)
   date_of_birth DateTime  @db.DateTime(0)
@@ -30,9 +35,13 @@ model Children {
   activity      Int
   created_at    DateTime? @default(now()) @db.Timestamp(0)
   updated_at    DateTime? @default(now()) @db.Timestamp(0)
-  user_id       String @unique
-  user          User? @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  calories_needed Float
+  gender        Gender
+  user_id       String
+  user          User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
+
+
 
 model Comment {
   id         String  @id @default(uuid())
@@ -41,7 +50,7 @@ model Comment {
   content    String? @db.Text
   picture    String? @db.VarChar(255)
   rating     Int
-  users      User?    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "komentar_ibfk_1")
+  users      User    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "komentar_ibfk_1")
   recipe     Recipe  @relation(fields: [recipe_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([user_id], map: "user_id")
@@ -73,15 +82,22 @@ model User {
   password   String     @db.VarChar(255)
   created_at DateTime   @default(now()) @db.Timestamp(0)
   updated_at DateTime   @default(now()) @db.Timestamp(0)
+  phone      String? 
 
   comments   Comment[]
-  children   Children[]
-  diary Diary[]
+  children   Child[]
+  diary      Diary[]
   
 
   @@map("users")
 }
 
+
+model ChildOnDiary {
+  id String @id @default(uuid())
+  child_id String
+  diary_id String
+}
 
 model IngredientOnRecipe {
   id String @id @default(uuid())
@@ -92,7 +108,6 @@ model IngredientOnRecipe {
 }
 
 model DiaryOnRecipe {
-  // id String @id @default(uuid())
   recipe_id String
   diary_id String
   recipe Recipe? @relation(fields: [recipe_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map:"DiaryOnRecipe_recipe_id_fkey1")
