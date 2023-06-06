@@ -39,6 +39,7 @@ model Child {
   gender        Gender
   user_id       String
   user          User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  diary         Diary[]
 }
 
 
@@ -50,6 +51,8 @@ model Comment {
   content    String? @db.Text
   picture    String? @db.VarChar(255)
   rating     Int
+  created_at DateTime   @default(now()) @db.Timestamp(0)
+  updated_at DateTime   @default(now()) @db.Timestamp(0)
   users      User    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "komentar_ibfk_1")
   recipe     Recipe  @relation(fields: [recipe_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -67,6 +70,8 @@ model Recipe {
   how_to         String    @db.Text
   tools          String?   @db.Text
   description    String    @db.Text
+  created_at DateTime   @default(now()) @db.Timestamp(0)
+  updated_at DateTime   @default(now()) @db.Timestamp(0)
 
   comment        Comment[]
   diary          DiaryOnRecipe[]
@@ -93,11 +98,6 @@ model User {
 }
 
 
-model ChildOnDiary {
-  id String @id @default(uuid())
-  child_id String
-  diary_id String
-}
 
 model IngredientOnRecipe {
   id String @id @default(uuid())
@@ -108,22 +108,25 @@ model IngredientOnRecipe {
 }
 
 model DiaryOnRecipe {
-  recipe_id String
-  diary_id String
-  recipe Recipe? @relation(fields: [recipe_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map:"DiaryOnRecipe_recipe_id_fkey1")
-  diary Diary? @relation(fields: [diary_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "DiaryOnRecipe_recipe_id_fkey2")
+  id String @id @default(uuid())
+  recipe_id String?
+  diary_id String?
+  content String? @db.VarChar(255)
+  recipe Recipe? @relation(fields: [recipe_id], references: [id], onDelete: SetNull, onUpdate: SetNull, map:"DiaryOnRecipe_recipe_id_fkey1")
+  diary Diary? @relation(fields: [diary_id], references: [id], onDelete: SetNull, onUpdate: SetNull, map: "DiaryOnRecipe_recipe_id_fkey2")
   created_at DateTime   @default(now()) @db.Timestamp(0)
   updated_at DateTime   @default(now()) @db.Timestamp(0)
-
-  @@id([recipe_id, diary_id])
 }
 
 
 model Diary {
   id String @id @default(uuid())
   date DateTime @default(now()) @db.Timestamp(0)
-  content String @db.VarChar(255)
-  user_id String
-  user User? @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  user_id String?
+  child_id String?
+  created_at DateTime   @default(now()) @db.Timestamp(0)
+  updated_at DateTime   @default(now()) @db.Timestamp(0)
+  user User? @relation(fields: [user_id], references: [id], onDelete: SetNull, onUpdate: SetNull)
+  child Child? @relation(fields: [child_id], references: [id], onDelete: SetNull, onUpdate: SetNull)
   recipe DiaryOnRecipe[]
 }

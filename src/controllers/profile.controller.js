@@ -1,5 +1,5 @@
 const { updateUser, getUser} = require('../services/user.service')
-const { createChild  } = require('../services/child.services')
+const { createChild  } = require('../services/child.service')
 const catchAsync = require('../utils/catchAsync')
 
 
@@ -9,7 +9,7 @@ const getProfileInfo = catchAsync(async (req, res) => {
     })
     res.json({
         payload: {
-            result
+            result: result
         }
     })
 })

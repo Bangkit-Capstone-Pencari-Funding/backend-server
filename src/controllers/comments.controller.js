@@ -1,9 +1,11 @@
 const { createCommentService, getOneCommentById, getAllComments } = require('../services/comments.service')
+const { createUserDiary } = require('../services/diary.service')
 const catchAsync = require('../utils/catchAsync')
 
 
 const createComment = catchAsync(async (req, res, next) => {
     const result = await createCommentService(req)
+    const diary = await createUserDiary(req)
     res.json({
         payload: {
             created: result

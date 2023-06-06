@@ -3,11 +3,13 @@ const profileController = require('./profile.controller')
 const commentsController = require('./comments.controller')
 const articleController = require('./article.controller')
 const homeController = require('./home.controller')
+const diaryController = require('./diary.controller')
 
 module.exports = {
     authController,
     profileController,
     commentsController,
     articleController,
-    homeController
+    homeController,
+    diaryController
 }

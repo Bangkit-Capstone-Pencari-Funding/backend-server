@@ -19,7 +19,6 @@ router.post('/image', multer.single('image'), (req, res, next) => {
         })
 
         writeStream.on('error', (err) => {
-            console.log(err)
             next(err)
         })
 

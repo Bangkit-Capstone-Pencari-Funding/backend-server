@@ -29,11 +29,6 @@ app.options("*", cors())
 
 app.use("/v1", routes)
 
-app.use("/", (req, res, next) =>{
-    res.json({
-        message: "welcome to Growell RestAPI"
-    })
-})
 
 app.use((req, res, next) => {
     next(new ApiError(httpStatus.NOT_FOUND, "Page Not Founds"))

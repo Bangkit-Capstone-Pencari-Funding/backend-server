@@ -17,7 +17,9 @@ router.get('/google/oauth2', passport.authenticate('google',{scope: [
 
 
 router.get('/google/oauth2/callback', passport.authenticate('google',{session: false}), (req, res, next) => {
-    res.json({success: true, payload: req.user})
+    res.json({payload: {
+        token: req.user
+    }})
 })
 
 module.exports = router;

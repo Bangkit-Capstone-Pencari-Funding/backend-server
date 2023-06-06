@@ -8,6 +8,7 @@ const recipeRoute = require('./recipe.route')
 const articleRoute = require('./article.route')
 const homeRoute = require('./home.route')
 const uploadRoute = require('./upload.route')
+const diaryRoute = require('./diary.route')
 
 
 router.use('/home', homeRoute)
@@ -17,5 +18,6 @@ router.use('/recipe', recipeRoute)
 router.use('/recipe', commentsRoute)
 router.use('/articles', articleRoute)
 router.use('/upload', uploadRoute)
+router.use('/diary', diaryRoute)
 
 module.exports = router

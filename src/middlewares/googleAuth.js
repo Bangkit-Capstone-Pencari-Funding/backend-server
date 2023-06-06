@@ -12,7 +12,6 @@ passport.use(new GoogleStrategy({
     callbackURL: process.env.CALLBACK_URL
 },async (accessToken, refreshToken, profile, done) => {
     try {
-        console.log({...profile})
         let userAccount; 
         userAccount = await findUserByEmail(profile.emails[0].value) 
         if(!userAccount){

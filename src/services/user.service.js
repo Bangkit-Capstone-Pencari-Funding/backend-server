@@ -31,10 +31,8 @@ async function getUser(req, include){
         },
     }
     if(include) query.include = include
-    console.log("query")
-    console.log(query)
     const user = await prisma.user.findFirst(query)
-    if(!user) throw new ApiError(404, "user not found")
+    if(!user) throw new ApiError(httpStatus.NOT_FOUND, "user not found")
     delete user.password
     delete user.created_at
     delete user.updated_at
