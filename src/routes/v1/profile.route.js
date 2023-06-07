@@ -5,6 +5,8 @@ const authenticate = require('../../middlewares/auth')
 
 
 
-router.put('/update', authenticate, profileController.updateProfile)
+router.get('/', authenticate, profileController.getProfileInfo)
+router.put('/', authenticate, profileController.updateProfile)
+router.post('/child', authenticate, profileController.createChildProfile)
 
 module.exports = router;

@@ -1,12 +1,15 @@
 const { ApiError } = require('../errors')
 const { createUser, loginUser } = require('../services/user.service')
 const catchAsync = require('../utils/catchAsync')
+const createToken = require('../utils/createJWT')
+const createTokenPayload = require('../utils/createTokenPayload')
 
 
 const signUp = catchAsync(async (req, res, next) => {
     const createdUser = await createUser(req)
+    const token = await createToken(createTokenPayload(createdUser))
     res.json({payload: {
-        users: createdUser
+        token: token
     }
     })
 })
@@ -19,16 +22,8 @@ const login = catchAsync(async (req, res, next) => {
     })
 })
 
-const index = catchAsync(async (req, res)=>{
-    res.json({payload: {
-        users: req.user
-    }
-    })
-})
-
 
 module.exports= {
-    index,
     signUp,
     login
 }
