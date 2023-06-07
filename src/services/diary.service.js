@@ -38,23 +38,31 @@ const createUserDiary = async (req) => {
     if(!checkrRecipe) throw new ApiError(httpStatus.NOT_FOUND, "Recipe not found")
     const checkDiary = await checkUserDiary(req)
     if(checkDiary.length > 0){
-        useDiary = checkDiary.length > 1 ? checkDiary.filter((diary) => diary.child_id === child_id)[0] : checkDiary[0]
+        const {id} = checkDiary.length > 1 ? checkDiary.filter((diary) => diary.child_id === child_id)[0] : checkDiary[0]
+        useDiary = await prisma.diary.update({
+            where:{id: id},
+            data:{
+                recipe:{
+                    connect:[{id: recipe_id}]
+                }
+            }
+        })
+
     }else{
         useDiary =  await prisma.diary.create({
             data: {
                 user_id: user_id,
                 date: new Date(),
-                child_id: child_id
+                child_id: child_id,
+                recipe:{
+                    connect:[{
+                        id: recipe_id,
+                    }]
+                }
             }
         })
     }
-    const createDiary = await prisma.diaryOnRecipe.create({
-        data:{
-            diary_id: useDiary.id,
-            recipe_id: recipe_id
-        }
-    })
-    return createDiary
+    return useDiary
 }
 
 

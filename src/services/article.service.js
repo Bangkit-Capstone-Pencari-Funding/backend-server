@@ -4,7 +4,7 @@ const httpStatus = require('http-status')
 
 /**
  * Mengambil semua article pada database
- * @returns {article[]}
+ * @returns {article}
  * 
  */
 const getAllArticleService = async (req) => {

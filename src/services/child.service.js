@@ -15,6 +15,7 @@ async function createChild(req){
     if(!childName) throw new ApiError(400, "Child Name required")
     if(!dateOfBirth) throw new ApiError(400, "Date Of Birth required")
     if(!gender) throw new ApiError(400, "Gender required")
+    if(!activity) throw new ApiError(400, "Activity required")
     if(!weight) throw new ApiError(400, "weight required")
     if(!height) throw new ApiError(400, "Height required")
 

@@ -97,7 +97,7 @@ async function createUser(req){
 }
 
 async function updateUser(req){
-    const {name, email} = req.body
+    const {name, email, phone} = req.body
     const {id} = req.user
     const user = await prisma.user.findUnique({
         where: {
@@ -106,9 +106,10 @@ async function updateUser(req){
     })
     let updated = {}
 
-    if(!user) throw new ApiError(400, "User tidak ditemukan")
+    if(!user) throw new ApiError(httpStatus.NOT_FOUND, "User tidak ditemukan")
     if(name) updated.name = name
     if(email) updated.email = email
+    if(phone) updated.phone = phone
     const updatedUser = await prisma.user.update({
         where: {id:id},
         data: updated
@@ -116,7 +117,8 @@ async function updateUser(req){
     
     return {
         name: updatedUser.name,
-        email: updatedUser.email
+        email: updatedUser.email,
+        phone: updatedUser.phone
     }
 }
 

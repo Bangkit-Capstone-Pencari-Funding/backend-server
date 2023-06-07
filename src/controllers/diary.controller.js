@@ -5,7 +5,9 @@ const {getAllUserDiary, checkUserDiary, createUserDiary} = require('../services/
 const getUserDiary = catchAsync(async (req, res) => {
     const result = await getAllUserDiary(req)
     res.json({
-        result
+        payload: {
+            result: result
+        }
     })
 })
 

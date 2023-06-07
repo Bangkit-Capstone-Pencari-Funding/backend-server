@@ -7,8 +7,30 @@ const httpStatus = require('http-status')
  *
  */
 const getAllRecipeService = async (req) => {
-    const recipe = await prisma.recipe.findMany()
-    return recipe
+    const {ingredients} = req.query
+    let ingredientsList
+    let recipes;
+    if(ingredients){
+        ingredientsList = ingredients.split(',').map((ingredient) => {
+            return {name: ingredient}
+        })
+        const result = await prisma.recipe.findMany({
+            where:{
+                ingredients:{
+                    every: {
+                        OR: ingredientsList
+                    }
+                }
+            }
+        })
+        console.log("result")
+        recipes = result
+    }else{
+        recipes = await prisma.recipe.findMany()
+    }
+    console.log("recipes")
+    console.log(recipes)
+    return recipes
 }
 
 const getFavoritesService = async (req) => {
