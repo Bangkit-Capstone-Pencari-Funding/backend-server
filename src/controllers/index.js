@@ -4,6 +4,7 @@ const commentsController = require('./comments.controller')
 const articleController = require('./article.controller')
 const homeController = require('./home.controller')
 const diaryController = require('./diary.controller')
+const imageController = require('./image.controller')
 
 module.exports = {
     authController,
@@ -11,5 +12,6 @@ module.exports = {
     commentsController,
     articleController,
     homeController,
-    diaryController
+    diaryController,
+    imageController
 }
