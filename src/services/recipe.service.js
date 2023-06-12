@@ -17,19 +17,23 @@ const getAllRecipeService = async (req) => {
         const result = await prisma.recipe.findMany({
             where:{
                 ingredients:{
-                    every: {
+                    some: {
                         OR: ingredientsList
                     }
                 }
+            },
+            orderBy:{
+                rating: 'desc'
             }
         })
-        console.log("result")
         recipes = result
     }else{
-        recipes = await prisma.recipe.findMany()
+        recipes = await prisma.recipe.findMany({
+            orderBy:{
+                rating: 'desc'
+            }
+        })
     }
-    console.log("recipes")
-    console.log(recipes)
     return recipes
 }
 

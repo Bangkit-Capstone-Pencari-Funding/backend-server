@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch src --exec \"node src/index.js\"",
+    "start": "node src/index.js",
     "container": "nodemon --watch src --exec \"node ./index.js\" && npx prisma migrate dev",
     "prisma:dev": "npx prisma migrate dev"
   },
