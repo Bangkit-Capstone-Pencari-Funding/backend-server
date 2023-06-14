@@ -1,17 +1,1 @@
-runtime: nodejs20
-service: default
 
-vpc_access_connector:
-  name: projects/capstone-project-growell/locations/asia-southeast2/connectors/growell-app
-  egress_setting: all-traffic
-
-env_variables:
-  # ENV: "production"
-  DATABASE_URL: "mysql://root:growellJaya@172.16.2.2:3306/bangkit_capstone?schema=public"
-  GOOGLE_PROJECT_ID : 'capstone-project-growell'
-  JWT_SECRET : "5e85fca91adfb5a0d3c8f5a0593fc04bc842aad80399b6c75ffa5c1e0db162f5f491a83aa51c7b1dfd881d463824a81d2c3a6bf0f570acdba03b1d535633d469"
-  CALLBACK_URL : 'https://capstone-project-growell.et.r.appspot.com/v1/auth/google/oauth2/callback'
-  CLIENT_ID : "342529277351-4jk5n4shoenjlvg1a7novkguom3udadr.apps.googleusercontent.com"
-  CLIENT_SECRET : "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"
-  TOKEN_EXPIRATION : "3d"
-  SERVICE_ACC_KEY_PATH : "credentials/key.json"
