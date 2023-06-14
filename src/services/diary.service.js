@@ -7,13 +7,13 @@ const getAllUserDiary = async (req) => {
     const diaries = await prisma.diary.findMany({
         where: {user_id: user_id},
         include:{
-            recipe: {
-                select: {
-                    recipe: true
-                }
-            },
             user: true,
-            child: true
+            child: true,
+            recipe: {
+                include: {
+                    ingredients: true
+                }
+            }
         }
     })
 

@@ -7,8 +7,7 @@ const createTokenPayload = require('../utils/createTokenPayload')
 
 
 async function loginUser(req){
-    const {name, email, password} = req.body
-    if(!name) throw new ApiError(httpStatus.BAD_REQUEST, "Name required")
+    const {email, password} = req.body
     if(!email) throw new ApiError(httpStatus.BAD_REQUEST, "Email required")
     if(!password) throw new ApiError(httpStatus.BAD_REQUEST, "password required")
     const checkEmail = await prisma.user.findUnique({
