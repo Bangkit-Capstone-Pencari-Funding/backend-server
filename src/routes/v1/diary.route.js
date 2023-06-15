@@ -5,7 +5,7 @@ const authenticate = require('../../middlewares/auth')
 
 
 router.get('/', authenticate, diaryController.getUserDiary )
-router.get('/check', authenticate, diaryController.checkDiaryDate )
-router.post('/', authenticate, diaryController.createDiary )
+router.get('/check/:childId', authenticate, diaryController.checkDiaryDate )
+// router.post('/', authenticate, diaryController.createDiary )
 
 module.exports = router;
