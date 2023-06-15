@@ -7,7 +7,6 @@ const getAllUserDiary = async (req) => {
     const diaries = await prisma.diary.findMany({
         where: {user_id: user_id},
         include:{
-            user: true,
             child: true,
             recipe: {
                 include: {
@@ -30,13 +29,13 @@ const createUserDiary = async (req) => {
     if(!recipe_id) throw new ApiError(httpStatus.BAD_REQUEST, "Recipe Id required")
     if(!child_id) throw new ApiError(httpStatus.BAD_REQUEST, "Child Id required")
     let useDiary
-    const checkrRecipe = await prisma.recipe.findFirst({
+    const checkRecipe = await prisma.recipe.findFirst({
         where: {
             id: recipe_id,
         }
     })
-    if(!checkrRecipe) throw new ApiError(httpStatus.NOT_FOUND, "Recipe not found")
-    const checkDiary = await checkUserDiary(req)
+    if(!checkRecipe) throw new ApiError(httpStatus.NOT_FOUND, "Recipe not found")
+    const checkDiary = await checkUserDiary(req,"", child_id)
     if(checkDiary.length > 0){
         const {id} = checkDiary.length > 1 ? checkDiary.filter((diary) => diary.child_id === child_id)[0] : checkDiary[0]
         useDiary = await prisma.diary.update({
@@ -67,21 +66,42 @@ const createUserDiary = async (req) => {
 
 
 
-const checkUserDiary = async (req, date="") => {
+const checkUserDiary = async (req, date="", child="") => {
     const {id:user_id} = req.user
     const today = date ? new Date(date) : new Date()
     today.setHours(0, 0, 0, 0)
     const tomorrow = new Date(today)
     tomorrow.setHours(23, 59, 59, 999)
-    const diary = await prisma.diary.findMany({
-        where: {
-            user_id: user_id,
-            date: {
-                gte: today,
-                lt: tomorrow
+    let diary
+    if(child){
+        diary = await prisma.diary.findMany({
+            where: {
+                user_id: user_id,
+                child_id: child,
+                date: {
+                    gte: today,
+                    lt: tomorrow
+                }
+            },
+            include:{
+                recipe: true
             }
-        }
-    })
+        })
+    }
+    else{
+        diary = await prisma.diary.findMany({
+            where: {
+                user_id: user_id,
+                date: {
+                    gte: today,
+                    lt: tomorrow
+                }
+            },
+            include:{
+                recipe: true
+            }
+        })
+    }
     return diary
 }
 

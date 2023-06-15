@@ -12,7 +12,9 @@ const getUserDiary = catchAsync(async (req, res) => {
 })
 
 const checkDiaryDate = catchAsync(async (req, res) => {
-    const check = await checkUserDiary(req)
+    const { date="" } = req.query
+    const { childId="" }= req.params
+    const check = await checkUserDiary(req, date, childId)
     res.json({
         payload:{
             result: check
